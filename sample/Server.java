@@ -34,29 +34,6 @@ public class Server extends UnicastRemoteObject implements FileInterface {
 		}
 	}
 
-	// public String checkPermit(String path){
-	// 	int len = path.length();
-	// 	int c = 0, i=0;
-	// 	while(i<len){
-	// 		if(path.charAt(i)!='.' && path.charAt(i)!='/'){
-	// 			i++;
-	// 			continue;
-	// 		}
-	// 		if(path.charAt(i)=='.'){
-	// 			if(i+1<len && path.charAt(i+1)=='/') i+=2;
-	// 			if(i+2<len && path.charAt(i+1)=='.' && path.charAt(i+2)=='/'){
-	// 				i+=3;
-	// 				c--;
-	// 				if(c<0) return "false";
-	// 			}
-	// 		}else{ // path.charAt(i)=='/'
-	// 			i++;
-	// 			c++;
-	// 		}
-	// 	}
-	// 	return "true";
-	// }
-
 	public String[] checkFile(String path){
 		System.err.println("checkFile!!!"+path);
 		LinkedList list = new LinkedList<String>();
@@ -139,17 +116,11 @@ public class Server extends UnicastRemoteObject implements FileInterface {
 			int left = filesize-CHUNKSIZE*i;
 			int buffersize = (left>=CHUNKSIZE?CHUNKSIZE:left);
 			byte buffer[] = new byte[buffersize];
-			// FileInputStream fi = new FileInputStream(file);
-			// FileChannel fc = fi.getChannel();
-			// fc.position(CHUNKSIZE*i);
-			// BufferedInputStream input = new BufferedInputStream(fi);
 			RandomAccessFile raf = new RandomAccessFile(file, "r");
 			raf.seek(CHUNKSIZE*i);
 			raf.read(buffer);
 			System.err.println("reading at offset: "+CHUNKSIZE*i+" buffersize:"+buffersize);
-			// input.read(buffer, 0, buffersize);
 			System.err.println("downloaded "+buffersize+"byte");
-			// input.close();
 			return buffer;
 		} catch(Exception e){
 			e.printStackTrace();
@@ -177,38 +148,12 @@ public class Server extends UnicastRemoteObject implements FileInterface {
             if(i==0 && file.exists()) file.delete(); // delete old version
             RandomAccessFile raf = new RandomAccessFile(file, "rw");
             raf.seek(raf.length());
-            // FileOutputStream fo = new FileOutputStream(file);
-            // FileChannel fc = fo.getChannel();
-            // fc.position(CHUNKSIZE*i);
-         //    BufferedOutputStream output = new BufferedOutputStream(fo);
-	        // output.write(fileData, 0, fileData.length);
-	        // output.flush();
-	        // output.close();
             raf.write(fileData);
             if(i==0) version.put(fileName, time);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-	// public void uploadFile(String fileName, byte[] fileData, long start, String time){
-	// 	System.err.println("uploadFile: "+fileName);
- //        try {
- //            File file = new File(rootDir, fileName);
- //            RandomAccessFile writeFile = new RandomAccessFile(file, "rw");
- //            FileChannel fc = writeFile.getChannel();
- //            //System.err.println("fc position before: "+writeFile.getChannel().position()+"\nstart: "+start);
- //            fc.position(start);
- //            //System.err.println("fc position after: "+fc.position());
- //            fc.write(ByteBuffer.wrap(fileData));
- //            // writeFile.seek(start);
- //            // writeFile.write(fileData, 0, fileData.length);
- //            writeFile.close();
- //            version.put(fileName, time);
- //        } catch (Exception e) {
- //            e.printStackTrace();
- //        }
- //    }
 
 	public static void main(String args[]) {
 		if (args.length != 2) {

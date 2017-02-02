@@ -88,7 +88,6 @@ class Proxy {
                     file.delete();
                     cacheUsed-=len;
                     notUse.remove(cacheQueue.get(i));
-                    //updateQueue(null, i);
                     break;
                 }
             }
@@ -126,11 +125,9 @@ class Proxy {
             System.err.printf("Open(%s,", path);
             System.err.print(o);
             System.err.printf(")\n");
-	        // String name = "//"+serverIP+":"+serverPort+"/Server";
             String[] serverState = {"false", "false", "000000", "false", "0"};
             //FileInterface fi = null;
             try{
-                //fi = (FileInterface) Naming.lookup(name);
                 serverState=fi.checkFile(path);
             } catch(Exception e){
                 e.printStackTrace();
@@ -264,7 +261,6 @@ class Proxy {
                                 left-=CHUNKSIZE;
                             }
                             output.close();
-                            // System.err.println
                             notUse.put(path, path+"#"+serverState[2]);
                         } catch(Exception e) {
                             e.printStackTrace();
@@ -309,7 +305,6 @@ class Proxy {
                     } catch (FileNotFoundException e) {
                     	return Errors.ENOENT;
                     }
-                    //return Errors.EINVAL;
 
                 case CREATE:
                     if (fileExist && fileisDir) {
@@ -384,7 +379,6 @@ class Proxy {
                     } catch (FileNotFoundException e) {
                     	return Errors.ENOENT;
                     }
-                    //return Errors.EINVAL;
 
                 case CREATE_NEW:
                     if (serverState[0].equals("true")) {
@@ -406,7 +400,6 @@ class Proxy {
                     } catch (FileNotFoundException e) {
                     	return Errors.ENOENT;
                     }
-                    //return Errors.EINVAL;
                 default:
                     return Errors.EINVAL;
             }
@@ -476,10 +469,6 @@ class Proxy {
                     File file = new File(cacheDir, cf.name);
                     RandomAccessFile raf = new RandomAccessFile(file, "r");
                     int filesize = (int) file.length();
-                    // byte[] buffer = new byte[filesize];
-                    // BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));
-                    // input.read(buffer,0,buffer.length);
-                    // input.close();
                     String timeStamp = new java.text.SimpleDateFormat("HHmmss").format(new Date());
                     int n=filesize/CHUNKSIZE;
                     if(filesize%CHUNKSIZE!=0) n++;
